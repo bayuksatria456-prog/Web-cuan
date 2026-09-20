@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Multi-Utilitas Teks</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; padding-bottom: 70px; color: #333; scroll-behavior: smooth; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid #28a745; }
+        h3 { color: #28a745; margin-top: 0; }
+        textarea { width: 100%; height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; resize: vertical; font-size: 14px; }
+        button { background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #218838; }
+        .ad-slot { background: #e9ecef; border: 2px dashed #ccc; padding: 15px; text-align: center; font-weight: bold; color: #6c757d; margin-bottom: 20px; border-radius: 6px; }
+        .result-box { margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 4px; border: 1px solid #e9ecef; font-family: monospace; }
+        
+        .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: #ffc107; color: #000; text-align: center; padding: 12px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 9999; font-size: 14px; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 5px; }
+        .cookie-btn { background: #000; color: #fff; border: none; padding: 4px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Slot Iklan Google AdSense / Sponsor (Banner Atas) -->
+    <div class="ad-slot">Slot Iklan Google AdSense / Sponsor</div>
+
+    <!-- Fitur 1: Penghitung Kata & Karakter -->
+    <div class="card" id="fitur1">
+        <h3>| Fitur 1: Penghitung Kata & Karakter</h3>
+        <form action="/#fitur1" method="POST">
+            <input type="hidden" name="action" value="hitung">
+            <textarea name="teks" placeholder="Ketik atau tempel teks di sini...">{{ teks_asal if hasil and 'Jumlah' in hasil else '' }}</textarea>
+            <button type="submit">Hitung Sekarang</button>
+        </form>
+        {% if hasil and 'Jumlah' in hasil %}
+        <div class="result-box"><strong>Hasil Analisis:</strong><br>{{ hasil }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Fitur 2: Perapih Teks -->
+    <div class="card" id="fitur2">
+        <h3>| Fitur 2: Perapih Teks (Text Formatter)</h3>
+        <form action="/#fitur2" method="POST">
+            <input type="hidden" name="action" value="rapih">
+            <textarea name="teks" placeholder="Tempel teks berantakan di sini...">{{ teks_asal if hasil and 'Jumlah' not in hasil else '' }}</textarea>
+            <button type="submit">Rapikan Teks Sekarang</button>
+        </form>
+        {% if hasil and 'Jumlah' not in hasil and hasil_convert is not defined and hasil_replace is not defined and hasil_empty is not defined %}
+        <div class="result-box"><strong>Hasil Rapi:</strong><br>{{ hasil }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Fitur 3: Konverter Huruf -->
+    <div class="card" id="fitur3">
+        <h3>| Fitur 3: Konverter Huruf (Case Converter)</h3>
+        <form action="/convert#fitur3" method="POST">
+            <textarea name="teks" placeholder="Ketik atau tempel teks di sini...">{{ teks_asal if hasil_convert else '' }}</textarea>
+            <div style="margin-top: 10px;">
+                <select name="tipe" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option value="upper">HURUF BESAR SEMUA</option>
+                    <option value="lower">huruf kecil semua</option>
+                    <option value="title">Huruf Besar Di Awal Kata</option>
+                </select>
+                <button type="submit" style="margin-top:0; margin-left: 5px;">Konversi Teks</button>
+            </div>
+        </form>
+        {% if hasil_convert %}
+        <div class="result-box"><strong>Hasil Konversi:</strong><br>{{ hasil_convert }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Fitur 4: Pencari & Pengganti Kata -->
+    <div class="card" id="fitur4">
+        <h3>| Fitur 4: Pencari & Pengganti Kata (Temukan & Ganti)</h3>
+        <form action="/replace#fitur4" method="POST">
+            <textarea name="teks" placeholder="Ketik atau tempel paragraf teks di sini...">{{ teks_asal if hasil_replace else '' }}</textarea>
+            <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <input type="text" name="cari" placeholder="Kata yang dicari..." style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; flex: 1; min-width: 150px;" required>
+                <input type="text" name="ganti" placeholder="Kata pengganti..." style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; flex: 1; min-width: 150px;">
+                <button type="submit" style="margin-top:0;">Ganti Kata</button>
+            </div>
+        </form>
+        {% if hasil_replace %}
+        <div class="result-box"><strong>Hasil Penggantian Teks:</strong><br>{{ hasil_replace }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Fitur 5: Penghapus Baris Kosong -->
+    <div class="card" id="fitur5">
+        <h3>| Fitur 5: Penghapus Baris Kosong</h3>
+        <form action="/remove-empty#fitur5" method="POST">
+            <textarea name="teks" placeholder="Tempel teks yang memiliki banyak baris kosong berantakan di sini...">{{ teks_asal if hasil_empty else '' }}</textarea>
+            <button type="submit">Dihapus Baris Kosong</button>
+        </form>
+        {% if hasil_empty %}
+        <div class="result-box"><strong>Hasil Bersih:</strong><br>{{ hasil_empty }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Slot Iklan Google AdSense / Sponsor (Banner Bawah) -->
+    <div class="ad-slot">Slot Iklan Google AdSense / Sponsor</div>
+
+    <!-- Informasi Dasar Footer Lengkap -->
+    <div class="card" style="border-left: 4px solid #6c757d;">
+        <p style="margin-top: 0; font-weight: bold;">Halaman Informasi Dasar:</p>
+        <p><strong>Tentang Kami:</strong> Web utilitas format data instan mirip referensi freeformatter.</p>
+        <p><strong>Kebijakan Privasi:</strong> Seluruh data diproses langsung dan tidak disimpan.</p>
+        <p><strong>Hubungi Kami:</strong> support@formattools.id</p>
+    </div>
+
+</div>
+
+<!-- Spanduk Peringatan Cookie Di Bawah Layar -->
+<div class="cookie-banner" id="cookieBanner">
+    <div>Website ini menggunakan cookie untuk kenyamanan Anda. <button class="cookie-btn" onclick="document.getElementById('cookieBanner').style.display='none'">Setuju</button></div>
+</div>
+
+</body>
+</html>
+
